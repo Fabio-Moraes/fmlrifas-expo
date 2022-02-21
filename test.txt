@@ -1,0 +1,74 @@
+        //ADM USER
+        setLoginValue({
+            name: 'James_TI',
+            password: '1234',
+            permission: 'adm'
+        });
+
+        //ADD NUMBER
+        for (let i = 0; i <= 1000; i++){
+            api.post("registerBuy", {
+                        number: i,
+                        name: Math.random().toString(36),
+                        phone: '(000)000000000',
+                }).then((response) => { });
+            }
+
+
+        //APPROVE NUMBER
+        for (let i = 2000; i <= 3000; i++) {
+            api.get("approveCard", {
+                    params: {
+                        number: i,
+                        name: loginValue.name,
+                        password: loginValue.password
+                    }
+                }).then((Responce) => { });
+            }
+
+        //REJECT NUMBER
+        for (let i = count; i <= (count + 1000); i++) {
+            api.get("rejectCard", {
+                    params: {
+                        number: i,
+                        name: loginValue.name,
+                        password: loginValue.password
+                    }
+                }).then((responce) => { });
+            }
+
+        api.get("deleteAll", {
+            params: {
+                name: loginValue.name,
+                password: loginValue.password
+            }
+        }).then((responce) => { });
+
+
+/*
+    function deleteItem() {
+        const estados = ["RJ", "MG", "SP", "SC", "SP", "SP", "PR", "PE", "PA"];
+        const buscar = "RJ";
+        let indice = estados.indexOf(buscar);
+        while (indice >= 0) {
+            estados.splice(indice, 1);
+            indice = estados.indexOf(buscar);
+        }
+        console.log(estados);
+    }
+*/
+
+/*
+const [numberSelectDelete, setNumberSelectDelete] = useState<number[]>([]);
+
+function handleRemoveItem(i: number) {
+    const temp = [...shoppingCartItem];
+    const buscar = i;
+    let indice = temp.indexOf(buscar);
+    while (indice >= 0) {
+        temp.splice(indice, 1);
+        indice = temp.indexOf(buscar);
+    }
+    setShoppingCartItem(temp)
+};
+*/
