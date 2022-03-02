@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions} from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 
 const styles = StyleSheet.create({
     containeMain: {
@@ -21,17 +21,6 @@ const styles = StyleSheet.create({
         flex: 1
     },
 
-
-    listText: {
-        fontSize: 40,
-        color: '#000',
-        backgroundColor: '#fff',
-        padding: 5,
-        borderRadius: 10,
-        margin: 20
-
-    },
-
     input: {
         paddingHorizontal: 5,
         textAlignVertical: 'center',
@@ -44,12 +33,6 @@ const styles = StyleSheet.create({
         color: '#fff'
     },
 
-    payText: {
-        color: '#fff',
-        fontSize: 30,
-        textAlign: 'center'
-    },
-
     buttonPay: {
         backgroundColor: '#26A744',
         borderRadius: 15,
@@ -58,14 +41,17 @@ const styles = StyleSheet.create({
         marginTop: 15,
     },
 
-
-    textAlertCancel: {
-        color: '#fff',
-        fontSize: 30,
-        textAlign: 'center',
-        marginHorizontal: 10,
-        paddingVertical: 20,
+    textLoad: { 
+        color: '#fff', 
+        fontSize: 30, 
+        textAlign: 'center', 
+        marginHorizontal: 10 
     },
 
+    indicator: {
+        marginTop: 10, 
+        marginBottom: 20
+    }
+        
 });
 export { styles };

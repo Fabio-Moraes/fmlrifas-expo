@@ -22,22 +22,18 @@ type YourNavigatorProps = NativeStackNavigationProp<ParamListBase, keyof ParamLi
 import api from '../../../services/api';
 
 export function RegisterMenu() {
-    const { LoadPage } = useLoadPage();
-
     const {
         setRegisterMenuActive,
         setShoppingCartItem,
-        setShoppingCartActive,
     } = useContexState();
 
     const {
         shoppingCartItem,
         registerMenuActive,
-        selectedNumber,
-        getList,
         loginValue,
-        listData
     } = useContexState();
+
+    const { LoadPage } = useLoadPage();
 
     const [alertCancelPurchaseActive, setAlertCancelPurchaseActive] = useState(false)
     const [loadFinishing, setLoadFinishing] = useState(false);
@@ -148,10 +144,10 @@ export function RegisterMenu() {
                 if (i + 1 === shoppingCartItem.length) {
                     if (loginValue.permission === 'adm') {
                         setShoppingCartItem([]);
-                        LoadPage(Number(listData[0]?.firstCard));
+                        LoadPage();
                     } else {
                         navigation.navigate('Checkout');
-                        LoadPage(Number(listData[0]?.firstCard));
+                        LoadPage();
                     };
                 };
                 setRegisterMenuActive(false);
@@ -170,7 +166,7 @@ export function RegisterMenu() {
     function ButtonCancelBuy() {
         function deleteData(i: number) {
             setLoadFinishing(true);
-            api.delete(`deleteBuy/${shoppingCartItem[i]}`, {}).then((response) => {
+            api.put("deleteBuy", { number: shoppingCartItem[i] }).then((response) => {
                 setLoadFinishing(false);
             });
         };

@@ -8,9 +8,11 @@ import { useLoadPage } from '../../hooks/loadPage';
 import { useContexState } from '../../hooks/context';
 
 export function SearchNumber() {
-    const { LoadPage } = useLoadPage();
     const { isMountedApi } = useContexState();
+    const { LoadPage } = useLoadPage();
+    
     const [value, onChangeText] = useState('Buscar');
+    
     const ref = useRef<TextInput>(null);
 
     function FilterString(text: string) {
@@ -32,7 +34,7 @@ export function SearchNumber() {
                     onChangeText('');
                 }}
                 onBlur={() => {
-                    if (value) LoadPage(Number(value));
+                    if (value) LoadPage();
                     onChangeText('Buscar');
                 }}
                 ref={ref}

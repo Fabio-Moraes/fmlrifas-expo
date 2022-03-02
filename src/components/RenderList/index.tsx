@@ -1,7 +1,8 @@
 import React, {
     useEffect,
     useCallback,
-    useRef
+    useRef,
+    useState
 } from 'react';
 
 import {
@@ -20,27 +21,34 @@ import { ListItem } from '../../components/ListItem';
 import { styles } from './styles';
 
 export function RenderList() {
-    const { LoadPage } = useLoadPage();
+    const {
+        setAutoScroll
+    } = useContexState();
 
     const {
         listData,
         getList,
         responceArray,
-        sortNumber
+        autoScroll
     } = useContexState();
 
+    const { LoadPage } = useLoadPage();
+
     const refContainer = useRef<FlatList>(null);
-    const responceNumber = responceArray[0]
+    const responceNumber = responceArray[0];
 
     useEffect(() => {
-        if (responceNumber) {
+        if (autoScroll) {
             refContainer.current?.scrollToIndex({
                 index: 0,
                 animated: false,
             });
-        } else {
+            setAutoScroll(false);
+        };
+
+        if (!responceNumber) {
             LoadPage();
-        }
+        };
     }, [responceNumber]);
 
     const RenderItem = useCallback(
@@ -53,17 +61,13 @@ export function RenderList() {
         (item) => item.id.toString(), []
     );
 
-    function SortNumberSelect() {
-        if (sortNumber === 'default') { return listData };
-
-        return listData.map((i, index) => {
-            return {
-                firstCard: responceArray
-                    .sort((x, y) => x.number - y.number)[index]?.number,
-                id: String(index)
-            };
-        });
-    };
+    const SortNumberSelect = listData.map((i, index) => {
+        return {
+            firstCard: responceArray
+                .sort((x, y) => x.number - y.number)[index]?.number,
+            id: String(index)
+        };
+    });
 
     return (
         <View style={styles.listContainer}>
@@ -77,7 +81,7 @@ export function RenderList() {
                 numColumns={6}
                 initialNumToRender={10}
                 key="list"
-                data={SortNumberSelect()}
+                data={SortNumberSelect}
                 windowSize={80}
                 showsVerticalScrollIndicator={false}
                 renderItem={RenderItem}

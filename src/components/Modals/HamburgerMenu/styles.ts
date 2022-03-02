@@ -17,6 +17,14 @@ const styles = StyleSheet.create({
         alignItems: 'flex-end',
     },
 
+    containerMenu: {
+        alignItems: 'flex-start',
+        backgroundColor: 'rgba(0,0,0,0.8)',
+        borderRadius: 7,
+        borderWidth: 3,
+        borderColor: '#356',
+    },
+
     listText: {
         fontSize: 40,
         color: '#000',

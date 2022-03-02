@@ -15,18 +15,17 @@ import { useContexState } from '../../../hooks/context';
 import { styles } from './styles'
 
 export function Alert() {
-    const [active, setActive] = useState(false);
-    const fadeAnim = useRef(new Animated.Value(0)).current;
+    const {
+        setAlertActive,
+    } = useContexState();
 
     const {
         alertMessage,
         alertActive
     } = useContexState();
 
-    const {
-        setAlertActive,
-    } = useContexState();
-
+    const [active, setActive] = useState(false);
+    const fadeAnim = useRef(new Animated.Value(0)).current;
 
     function AnimatedAlert(value: boolean) {
         setActive(true);
@@ -40,12 +39,9 @@ export function Alert() {
         });
     };
 
-
     useEffect(() => {
         AnimatedAlert(alertActive);
     }, [alertActive]);
-
-
 
     return active ? <>
         <TouchableOpacity

@@ -17,5 +17,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
+
+    textButtoun: {
+        fontSize: 17,
+        //color: '#121212',
+        color: '#fff',
+        textAlign: 'center'
+    }
 });
 export { styles };

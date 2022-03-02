@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-    View,
     Text,
     TouchableOpacity,
     ActivityIndicator,
@@ -18,8 +17,11 @@ interface response {
         number: number;
         name: string;
         phone: string;
+        status: string;
+        dealer: string;
+        coupon: string
         price: number;
-        analyzed: number;
+        data_time: string;
     }[]
 };
 
@@ -34,8 +36,11 @@ interface ListItemProps {
             id: number;
             name: string;
             phone: string;
+            status: string;
+            dealer: string;
+            coupon: string
             price: number;
-            analyzed: number
+            data_time: string;
         }]
     };
 };
@@ -54,8 +59,6 @@ export function ListItem(listItemProps: ListItemProps) {
     const {
         isMountedApi,
         shoppingCartItem,
-        listData,
-        getList,
         loginValue
     } = useContexState();
 
@@ -74,29 +77,27 @@ export function ListItem(listItemProps: ListItemProps) {
             };
         };
 
-        if (responceCard) {
-            if (responceCard.name === 'Number added to cart'
-                && loginValue.permission === 'adm') {
-                return {
-                    backgroundColor: '#F4A900',
-                    color: '#fff'
-                };
-            };
 
-            if (responceCard.analyzed === 0) {
-                return {
-                    backgroundColor: '#17A2B7',
-                    color: '#fff'
-                };
+        if (responceCard?.name === 'Number added to cart'
+            && loginValue.permission === 'adm') {
+            return {
+                backgroundColor: '#F4A900',
+                color: '#fff'
             };
+        };
 
-            if (responceCard.analyzed === 1) {
-                return {
-                    backgroundColor: '#26A744',
-                    color: '#fff'
-                };
+        if (responceCard?.status === 'analyzed') {
+            return {
+                backgroundColor: '#17A2B7',
+                color: '#fff'
             };
+        };
 
+        if (responceCard?.status === 'paid') {
+            return {
+                backgroundColor: '#26A744',
+                color: '#fff'
+            };
         };
     };
 
@@ -105,46 +106,46 @@ export function ListItem(listItemProps: ListItemProps) {
             return 'O número já está no carrinho!';
         };
 
-        if (responceCard?.analyzed === 0) {
+        if (responceCard?.status === 'analyzed') {
             return 'O número está em análise!';
         };
 
-        if (responceCard?.analyzed === 1) {
-            return 'O número já foi comprado!';
+        if (responceCard?.status === 'paid') {
+            return `O número já foi comprado por\n"${responceCard?.name}"`;
         };
 
-        if (!responceCard) {
+        if (responceCard?.status === 'empty' && loginValue.permission === 'adm') {
             return 'Não é possível fazer compras através de uma conta administrativa!';
-        }
+        };
+
         return '';
     };
 
     function PaidCheck() {
         setCheckBuyLoad(true);
         function ResponceClick(responce: response) {
-            setCheckBuyLoad(false)
-            if (!responceCard && responce?.data.length === 0) {
-                if (loginValue.permission !== 'adm') {
+            setCheckBuyLoad(false);
+
+            if (loginValue.permission === 'adm') {
+                if (responceCard?.status !== 'empty') {
                     setPaymentMenuActive(true);
                     setSelectedNumber(cardNumber);
                 } else {
                     setAlertActive(true);
                     setAlertMessage(AlertMessageSelect());
-                }
-            } else if (responceCard && responce?.data.length !== 0) {
-                if (loginValue.permission === 'adm') {
+                };
+            } else {
+                if (responceCard?.status === 'empty') {
                     setPaymentMenuActive(true);
                     setSelectedNumber(cardNumber);
                 } else {
                     setAlertActive(true);
                     setAlertMessage(AlertMessageSelect());
-                }
+                };
             };
 
-            if (responceCard && responce.data.length === 0) {
-                LoadPage(Number(listData[0]?.firstCard));
-            } else if (!responceCard && responce.data.length !== 0) {
-                LoadPage(Number(listData[0]?.firstCard));
+            if (responce.data[0].status !== responceCard?.status) {
+                LoadPage();
             };
         };
 
@@ -157,14 +158,14 @@ export function ListItem(listItemProps: ListItemProps) {
     };
 
     function ButtonCard() {
-        return cardNumber <= 9999 && cardNumber >= 0 ? (
+        return (
             <TouchableOpacity
                 onPress={() => isMountedApi ? PaidCheck() : null}
-                style={{ alignItems: 'center', justifyContent: 'center' }}>
-                <Text
+                style={{ alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+                {(`0000${cardNumber}`).slice(-4) !== 'ined' ? <Text
                     style={[styles.listText, colorSelect()]}>
                     {(`0000${cardNumber}`).slice(-4)}
-                </Text>
+                </Text> : null}
                 {!isMountedApi || checkBuyLoad ?
                     <ActivityIndicator
                         style={{ position: 'absolute' }}
@@ -172,7 +173,7 @@ export function ListItem(listItemProps: ListItemProps) {
                         color='#121212'
                     /> : null}
             </TouchableOpacity>
-        ) : null
+        );
     };
 
     return <ButtonCard />;

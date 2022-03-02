@@ -8,22 +8,21 @@ import { styles } from './styles';
 import api from '../../../services/api';
 
 export function ShoppingCart() {
-    const { LoadPage } = useLoadPage();
-
     const {
         setShoppingCartItem,
         setShoppingCartActive,
         setRegisterMenuActive,
     } = useContexState();
-
+    
     const {
         shoppingCartItem,
         shoppingCartActive,
         loginValue,
-        listData,
         getList
     } = useContexState();
-    
+
+    const { LoadPage } = useLoadPage();
+
     const [numberSelectDelete, setNumberSelectDelete] = useState<number[]>([]);
 
     const keyExtractor = useCallback(
@@ -53,14 +52,14 @@ export function ShoppingCart() {
                 };
             };
 
-            if (responceCard.analyzed === 0) {
+            if (responceCard.status === 'analyzed') {
                 return {
                     backgroundColor: '#17A2B7',
                     color: '#fff'
                 };
             };
 
-            if (responceCard.analyzed === 1) {
+            if (responceCard.status === 'paid') {
                 return {
                     backgroundColor: '#26A744',
                     color: '#fff'
@@ -81,7 +80,7 @@ export function ShoppingCart() {
             }).then((responce) => {
                 if (i + 1 === shoppingCartItem.length) {
                     setShoppingCartActive(false);
-                    LoadPage(Number(listData[0]?.firstCard));
+                    LoadPage();
                     setShoppingCartItem([]);
                 };
                 console.log(responce.data);
@@ -96,19 +95,17 @@ export function ShoppingCart() {
 
     function ApproveCards() {
         function ApproveData(i: number) {
-            api.get("approveCard", {
-                params: {
+            api.put("approveCard", {
                     number: shoppingCartItem[i],
                     name: loginValue.name,
                     password: loginValue.password
-                }
+              
             }).then((responce) => {
                 if (i + 1 === shoppingCartItem.length) {
                     setShoppingCartActive(false);
-                    LoadPage(Number(listData[0]?.firstCard));
+                    LoadPage();
                     setShoppingCartItem([]);
                 };
-                console.log(responce.data);
             });
         };
 
@@ -123,8 +120,7 @@ export function ShoppingCart() {
 
         function deleteData(number: number) {
             if (loginValue.permission !== 'adm') {
-                api.delete(`deleteBuy/${number}`, {}).then((response) => {
-                });
+                api.put("deleteBuy", { number }).then();
             };
         };
 
@@ -138,7 +134,7 @@ export function ShoppingCart() {
                 };
                 setShoppingCartItem(temp);
                 setNumberSelectDelete([]);
-                LoadPage(Number(listData[0]?.firstCard));
+                LoadPage();
             };
         });
     };
@@ -248,9 +244,9 @@ export function ShoppingCart() {
 
                         {
                             shoppingCartItem.filter((item) => {
-                                return getList[item]?.[0].analyzed === 0
+                                return getList[item]?.[0].status === 'analyzed'
                             }).length > 0 && shoppingCartItem.filter((item) => {
-                                return getList[item]?.[0].analyzed !== 0
+                                return getList[item]?.[0].status !== 'analyzed'
                             }).length === 0 && shoppingCartItem.filter((item) => {
                                 return getList[item]?.[0].name === 'Number added to cart'
                             }).length === 0 ? (

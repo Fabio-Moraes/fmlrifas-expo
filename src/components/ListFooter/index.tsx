@@ -9,38 +9,30 @@ import { useLoadPage } from '../../hooks/loadPage';
 import { styles } from './styles';
 
 export function ListFooter() {
-    const { LoadPage } = useLoadPage();
-
     const {
         setNextPage,
-        setRewindPage
+        setRewindPage,
+        setAutoScroll
     } = useContexState();
 
     const {
-        listData,
-        perPage,
         isMountedApi,
-        sortNumber,
         responceArray,
         textFilterNumber
     } = useContexState();
 
-    const OnpressButton = () => {
-        if (sortNumber !== 'default') {
-            setRewindPage(false);
-            setNextPage(true);
-            LoadPage(0);
-
-        } else {
-            LoadPage(Number(listData[perPage - 1]?.firstCard + 1));
-        };
-    };
+    const { LoadPage } = useLoadPage();
 
     return (
         <>
-            {listData[perPage - 1]?.firstCard < 9999 && isMountedApi
+            {isMountedApi
                 ? <View style={styles.containerButton}>
-                    <TouchableOpacity onPress={OnpressButton}>
+                    <TouchableOpacity onPress={() => {
+                        setRewindPage(false);
+                        setNextPage(true);
+                        setAutoScroll(true);
+                        LoadPage();
+                    }}>
                         <AntDesign
                             name="caretdown"
                             style={styles.button}
@@ -49,7 +41,7 @@ export function ListFooter() {
                     </TouchableOpacity>
                 </View> : null}
 
-            {sortNumber !== 'default' && responceArray.length === 0 && isMountedApi
+            {isMountedApi && responceArray.length === 0
                 ? <Text
                     style={{
                         fontSize: 20,
@@ -59,6 +51,7 @@ export function ListFooter() {
                     }}>
                     {textFilterNumber}
                 </Text> : null}
+
             <Text
                 style={{
                     fontSize: 17,

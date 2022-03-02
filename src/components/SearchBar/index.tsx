@@ -4,16 +4,10 @@ import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useContexState } from '../../hooks/context';
 import { useLoadPage } from '../../hooks/loadPage';
 
+import { AntDesign } from '@expo/vector-icons';
 import { styles } from './styles';
 
-interface Lines {
-    firstCard: number;
-    id: string;
-};
-
 export function SearchBar() {
-    const { LoadPage } = useLoadPage();
-
     const {
         setKeyboardActive,
         setRewindPage,
@@ -28,8 +22,52 @@ export function SearchBar() {
         countAnalyzed
     } = useContexState();
 
-    const analyzedNumber = countAnalyzed.false ? countAnalyzed.false : 0
-    const paidNumber = countAnalyzed.true ? countAnalyzed.true : 0
+    const { LoadPage } = useLoadPage();
+
+    const analyzedNumber = countAnalyzed.analyzed ? countAnalyzed.analyzed : 0
+    const paidNumber = countAnalyzed.paid ? countAnalyzed.paid : 0
+
+    function ButtonHome() {
+        return (
+            <TouchableOpacity
+                onPress={() => {
+                    setGetList({});
+                    setResponceArray([]);
+                    setRewindPage(false);
+                    setNextPage(true);
+                    setSortNumber('default');
+                    LoadPage();
+                }}
+                style={[styles.containerButton, { backgroundColor: '#fff' }]}>
+                <Text style={[styles.textButtoun, { color: '#121212' }]}>
+                    <AntDesign name="home" size={27} color="black" /></Text>
+            </TouchableOpacity>
+        );
+    };
+
+    function ButtonFree() {
+        return (
+            <TouchableOpacity
+                onPress={() => {
+                    setGetList({});
+                    setResponceArray([]);
+                    setRewindPage(false);
+                    setNextPage(true);
+                    setSortNumber('empty');
+                    LoadPage();
+                }}
+                style={[styles.containerButton, { backgroundColor: '#fff' }]}>
+                <Text style={[styles.textButtoun, { color: '#121212' }]}>Livre{"\n"}
+                    {!isMountedApi
+                        ? <ActivityIndicator
+                            size={20}
+                            color='#121212'
+                        />
+                        : 10000 - (analyzedNumber + paidNumber)
+                    }</Text>
+            </TouchableOpacity>
+        );
+    };
 
     function ButtonAnalyzed() {
         return (
@@ -40,15 +78,11 @@ export function SearchBar() {
                     setRewindPage(false);
                     setNextPage(true);
                     setSortNumber('analyzed');
-                    LoadPage(0);
+                    LoadPage();
                 }}
                 style={[styles.containerButton, { backgroundColor: '#17A2B7' }]}>
                 <Text
-                    style={{
-                        fontSize: 17,
-                        color: '#fff',
-                        textAlign: 'center'
-                    }}>Em análise{"\n"}
+                    style={styles.textButtoun}>Em análise{"\n"}
                     {!isMountedApi
                         ? <ActivityIndicator
                             size={20}
@@ -69,10 +103,10 @@ export function SearchBar() {
                     setRewindPage(false);
                     setNextPage(true);
                     setSortNumber('paid');
-                    LoadPage(0);
+                    LoadPage();
                 }}
                 style={[styles.containerButton, { backgroundColor: '#26A744' }]}>
-                <Text style={{ fontSize: 17, color: '#fff', textAlign: 'center' }}>Pago{"\n"}{!isMountedApi
+                <Text style={styles.textButtoun}>Pago{"\n"}{!isMountedApi
                     ? <ActivityIndicator
                         size={20}
                         color='#121212'
@@ -83,31 +117,22 @@ export function SearchBar() {
         );
     };
 
-    function ButtonFree() {
-        return (
-            <TouchableOpacity style={[styles.containerButton, { backgroundColor: '#fff' }]}>
-                <Text style={{ fontSize: 17, color: '#121212', textAlign: 'center' }}>Livre{"\n"}
-                    {!isMountedApi
-                        ? <ActivityIndicator
-                            size={20}
-                            color='#121212'
-                        />
-                        : 10000 - (analyzedNumber + paidNumber)
-                    }</Text>
-            </TouchableOpacity>
-        );
-    };
-
     function ButtonSearch() {
         return (
-            <TouchableOpacity onPress={() => { isMountedApi && setKeyboardActive(true) }} style={[styles.containerButton, { backgroundColor: 'gray', }]}>
-                <Text style={{ fontSize: 17, color: '#fff' }}>Buscar</Text>
+            <TouchableOpacity
+                onPress={() => {
+                    isMountedApi && setKeyboardActive(true)
+                }} style={[styles.containerButton, { backgroundColor: '#fff' }]}>
+                <Text style={[styles.textButtoun, { color: '#121212' }]}>
+                    <AntDesign name="search1" size={27} color="black" />
+                </Text>
             </TouchableOpacity>
         );
     };
 
     return (
         <View style={styles.container}>
+            <ButtonHome />
             <ButtonFree />
             <ButtonAnalyzed />
             <ButtonPaid />

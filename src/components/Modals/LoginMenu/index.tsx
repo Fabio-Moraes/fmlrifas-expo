@@ -22,8 +22,7 @@ export function LoginMenu() {
     } = useContexState();
 
     const {
-        loginMenuActive,
-        loginValue
+        loginMenuActive
     } = useContexState();
 
     const [loadFinishing, setLoadFinishing] = useState(false);
@@ -58,8 +57,8 @@ export function LoginMenu() {
     function Load() {
         return (
             <>
-                <Text style={{ color: '#fff', fontSize: 30, textAlign: 'center', marginHorizontal: 10 }}>Conectando!</Text>
-                <ActivityIndicator size={37} color='#fff' style={{ marginTop: 10, marginBottom: 20 }} />
+                <Text style={styles.textLoad}>Conectando!</Text>
+                <ActivityIndicator size={37} color='#fff' style={styles.indicator} />
             </>
         );
     }

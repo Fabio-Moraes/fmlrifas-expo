@@ -6,8 +6,17 @@ import { Feather, SimpleLineIcons } from '@expo/vector-icons';
 import { styles } from './styles';
 
 export function CustomHeader() {
-    const { loginValue, shoppingCartItem, hamburgerMenuActive } = useContexState();
-    const { setShoppingCartActive, setAlertActive, setAlertMessage, setHamburgerMenuActive } = useContexState();
+    const {
+        setShoppingCartActive,
+        setAlertActive,
+        setAlertMessage,
+        setHamburgerMenuActive 
+    } = useContexState();
+
+    const {
+        shoppingCartItem,
+        hamburgerMenuActive 
+    } = useContexState();
 
     function ButtonShopping() {
         if (shoppingCartItem.length > 0) {

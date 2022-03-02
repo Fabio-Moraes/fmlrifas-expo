@@ -6,8 +6,21 @@ import { useLoadPage } from '../../../hooks/loadPage';
 import { styles } from './styles';
 
 export function Keyboard() {
+    const {
+        setKeyboardActive,
+        setSortNumber,
+        setRewindPage,
+        setNextPage,
+        setAutoScroll,
+        setSearchValue
+    } = useContexState();
+
+    const {
+        keyboardActive
+    } = useContexState();
+
     const { LoadPage } = useLoadPage();
-    const { keyboardActive, setKeyboardActive, setSortNumber } = useContexState();
+
     const [resultNumber, setResultNumber] = useState<string>('');
 
     function ButtonClean() {
@@ -16,15 +29,15 @@ export function Keyboard() {
                 setResultNumber(resultNumber.substring(0, resultNumber.length - 1));
             } else {
                 setKeyboardActive(false);
-            }
-        }
+            };
+        };
 
         return (
             <TouchableOpacity style={styles.buttonLimpar} onPress={OnPress}>
                 <Text style={styles.textButtonLimpar}>Limpar</Text>
             </TouchableOpacity>
-        )
-    }
+        );
+    };
 
     function ButtonAddNumber({ number }: { number: string }) {
         function OnPress() {
@@ -40,17 +53,24 @@ export function Keyboard() {
     };
 
     function ButtonFinishing() {
+        const number = Number(resultNumber);
+
         return (
             <TouchableOpacity onPress={() => {
                 setSortNumber('default');
                 setKeyboardActive(false);
                 setResultNumber('');
-                LoadPage(Number(resultNumber));
+                setRewindPage(false);
+                setNextPage(true);
+                setAutoScroll(true);
+                setSortNumber('default');
+                setSearchValue(number !== 0 ? number : -1);
+                LoadPage();
             }} style={styles.buttonConcluir}>
                 <Text style={styles.textButtonConcluir}>Concluir</Text>
             </TouchableOpacity>
-        )
-    }
+        );
+    };
 
     return (keyboardActive ? <>
         <TouchableOpacity onPress={() => {

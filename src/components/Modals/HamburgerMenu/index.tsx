@@ -5,6 +5,7 @@ import {
     TouchableOpacity,
     Dimensions
 } from 'react-native';
+import { ScreenContainer } from 'react-native-screens';
 
 import { useContexState } from '../../../hooks/context';
 import { styles } from './styles';
@@ -22,14 +23,7 @@ export function HamburgerMenu() {
     } = useContexState();
 
     function Menu() {
-        return <View style={{
-            alignItems: 'flex-start',
-            backgroundColor: 'rgba(0,0,0,0.8)',
-            borderRadius: 7,
-            borderWidth: 3,
-            borderColor: '#356',
-        }}>
-
+        return <View style={styles.containerMenu}>
             {loginValue.permission !== ''
                 ? <View style={[styles.containerButton, { paddingBottom: 6 }]}>
                     <Text style={styles.textButton}>
@@ -46,7 +40,6 @@ export function HamburgerMenu() {
                     style={styles.containerButton} >
                     <Text style={styles.textButton}>Entrar</Text>
                 </TouchableOpacity>}
-
 
             <TouchableOpacity
                 onPress={() => { setHamburgerMenuActive(false) }}

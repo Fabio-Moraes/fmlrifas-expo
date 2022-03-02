@@ -10,25 +10,31 @@ type listDataType = {
     id: string;
 };
 
+
 interface ConvertListReturn {
     [key: string]: [{
         id: number;
         name: string;
         phone: string;
+        status: string;
+        dealer: string;
+        coupon: string
         price: number;
-        analyzed: number;
-        created_at: string;
+        data_time: string;
     }]
 };
+
 
 interface ResponceArrayType {
     id: number;
     number: number;
     name: string;
     phone: string;
+    status: string;
+    dealer: string;
+    coupon: string
     price: number;
-    analyzed: number;
-    created_at: string;
+    data_time: string;
 };
 
 type StateContext = {
@@ -83,8 +89,8 @@ type StateContext = {
     loginValue: { name: string, password: string, permission: string };
     setLoginValue: (value: { name: string, password: string, permission: string }) => void;
 
-    countAnalyzed: { true: number, false: number };
-    setCountAnalyzed: (value: { true: number, false: number }) => void;
+    countAnalyzed: { paid: number, analyzed: number };
+    setCountAnalyzed: (value: { paid: number, analyzed: number }) => void;
 
     responceArray: ResponceArrayType[];
     setResponceArray: (value: ResponceArrayType[] | []) => void;
@@ -96,10 +102,16 @@ type StateContext = {
     setNextPage: (value: boolean) => void;
 
     rewindPage: boolean;
-    setRewindPage: (value: boolean) => void
+    setRewindPage: (value: boolean) => void;
+
+    autoScroll: boolean;
+    setAutoScroll: (value: boolean) => void;
 
     textFilterNumber: string;
     setTextFilterNumber: (value: string) => void;
+
+    searchValue: number | undefined;
+    setSearchValue: (value: number | undefined) => void;
 };
 
 type ProviderProps = {
@@ -126,13 +138,14 @@ const Provider = ({ children }: ProviderProps) => {
     const [alertActive, setAlertActive] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
     const [loginValue, setLoginValue] = useState({ name: '', password: '', permission: '' });
-    const [countAnalyzed, setCountAnalyzed] = useState({ true: 0, false: 0 });
+    const [countAnalyzed, setCountAnalyzed] = useState({ paid: 0, analyzed: 0 });
     const [responceArray, setResponceArray] = useState([]);
     const [sortNumber, setSortNumber] = useState('default');
     const [nextPage, setNextPage] = useState(false);
     const [rewindPage, setRewindPage] = useState(false);
-    const [textFilterNumber, setTextFilterNumber] = useState('Número não encontrado')
-
+    const [textFilterNumber, setTextFilterNumber] = useState('Número não encontrado');
+    const [autoScroll, setAutoScroll] = useState(false);
+    const [searchValue, setSearchValue] = useState();
     return (
         <Context.Provider value={{
             listData,
@@ -202,7 +215,13 @@ const Provider = ({ children }: ProviderProps) => {
             setRewindPage,
 
             textFilterNumber,
-            setTextFilterNumber
+            setTextFilterNumber,
+
+            autoScroll,
+            setAutoScroll,
+
+            searchValue,
+            setSearchValue
 
         } as StateContext}>
             {children}

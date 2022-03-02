@@ -49,7 +49,6 @@ export function SliderImage() {
                 </View>
             </View>
 
-
             <Animated.Image
                 style={[styles.imagen]}
                 source={{

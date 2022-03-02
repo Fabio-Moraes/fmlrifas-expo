@@ -13,8 +13,6 @@ import api from '../../../services/api';
 import { useLoadPage } from '../../../hooks/loadPage';
 
 export function PaymentMenu() {
-    const { LoadPage } = useLoadPage();
-
     const {
         setShoppingCartItem,
         setPaymentMenuActive,
@@ -28,9 +26,10 @@ export function PaymentMenu() {
         selectedNumber,
         paymentMenuActive,
         loginValue,
-        listData,
         getList
     } = useContexState();
+
+    const { LoadPage } = useLoadPage();
 
     const [load, setLoad] = useState(false);
     const [loadMessage, setLoadMessage] = useState('')
@@ -54,15 +53,13 @@ export function PaymentMenu() {
         setLoadMessage('Aprovando número!');
         setLoad(true);
 
-        api.get("approveCard", {
-            params: {
-                number: selectedNumber,
-                name: loginValue.name,
-                password: loginValue.password
-            }
+        api.put("approveCard", {
+            number: selectedNumber,
+            name: loginValue.name,
+            password: loginValue.password
         }).then((Responce) => {
             setPaymentMenuActive(false);
-            LoadPage(Number(listData[0]!.firstCard));
+            LoadPage();
             setLoad(false);
         });
     };
@@ -78,7 +75,7 @@ export function PaymentMenu() {
                 password: loginValue.password
             }
         }).then((responce) => {
-            LoadPage(Number(listData[0]!.firstCard));
+            LoadPage();
             setPaymentMenuActive(false);
             setLoad(false);
         });
@@ -92,10 +89,8 @@ export function PaymentMenu() {
             setLoad(false);
             setPaymentMenuActive(false);
         } else {
-            api.post("registerBuy", {
+            api.put("registerBuy", {
                 number: selectedNumber,
-                name: 'Number added to cart',
-                phone: '(__)_________',
             }).then((response) => {
                 if (message === 'Preparando o seu número!') {
                     setRegisterMenuActive(true);
@@ -109,11 +104,11 @@ export function PaymentMenu() {
     };
 
     function AlertMessageAbout() {
-        const analyzed = responceCard.analyzed === 1 ? 'Aprovado' : 'Em análise';
+        const analyzed = responceCard.status === 'paid' ? 'Aprovado' : 'Em análise';
 
         if (responceCard.name === 'Number added to cart') {
             return (`\n> Situação <|\nO número consta como no carrinho!
-            \n> Momento <\n${responceCard.created_at}`);
+            \n> Momento <\n${responceCard.data_time}`);
         };
 
         return (
@@ -122,7 +117,7 @@ export function PaymentMenu() {
                 {'\n'} <View style={styles.listTextComponent}>Telefone{'\n'}{responceCard.phone}</View>
                 {'\n'} <View style={styles.listTextComponent}>Situação{'\n'}{analyzed}</View>
                 {'\n'} <View style={styles.listTextComponent}>Revendedor{'\n'}{'Nenhum'}</View>
-                {'\n'} <View style={styles.listTextComponent}>Momento{'\n'}{responceCard.created_at}</View>
+                {'\n'} <View style={styles.listTextComponent}>Momento{'\n'}{responceCard.data_time}</View>
                 {'\n'} <View style={styles.listTextComponent}>Preço{'\n'}{'R$ 19,90'}</View>
             </ Text >);
     };
@@ -213,8 +208,8 @@ export function PaymentMenu() {
                 return (
                     <>
                         <AboutButton />
-                        {responceCard?.analyzed === 0 ? (
-                            responceCard?.name === 'Number added to cart'
+                        {responceCard.status === 'analyzed' ? (
+                            responceCard.name === 'Number added to cart'
                                 ? <ValidateButton />
                                 : <ApproveButton />
                         ) : null}

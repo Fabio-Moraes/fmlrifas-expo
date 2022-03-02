@@ -16,7 +16,6 @@ import QRCode from '../../assets/svg/QRCode'
 export default function Checkout() {
     const navigation = useNavigation<YourNavigatorProps>();
     const { shoppingCartItem, setShoppingCartItem, listData } = useContexState();
-    const { LoadPage } = useLoadPage()
 
     const conta = shoppingCartItem.length * 19.90;
     const price = (conta).toLocaleString("pt-BR", {
@@ -102,7 +101,6 @@ export default function Checkout() {
                     }}>• Se preferir, Copie e Cole o
                         Código Pix no seu Aplicativo ou Site Pix.</Text>
 
-
                 </View>
                 <TouchableOpacity style={{
                     backgroundColor: 'rgb(150,210,255))',
@@ -116,8 +114,8 @@ export default function Checkout() {
                 </TouchableOpacity>
             </View>
         </View >
-    )
-}
+    );
+};
 
 
 
